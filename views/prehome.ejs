@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FriendPost</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="header">FriendPost</div>
+    <div class="container">
+        <div class="section">
+            <h2>Login</h2>
+            <form name="login" action="/auth/login" method="post">
+                <label for="login-email">Email ID:</label>
+                <input type="email" id="login-email" name="username" required>
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" name="password" required>
+                <button type="submit">Submit</button>
+                <div class="errors" id="login-errors">
+                    <% if(pagedata.loginerror) { %>
+                        <div>
+                            <%= pagedata.loginerror %>
+                        </div>
+                    <% } %>
+                
+                    <% if(pagedata.messages && pagedata.messages.length> 0) { %>
+                        <ul>
+                            <% for(i=0;i < pagedata.messages.length;i++) { %>
+                                <li>
+                                    <%= pagedata.messages[i] %>
+                                </li>
+                                <% } %>
+                        </ul>
+                    <% } %>
+                </div>
+            </form>
+        </div>
+        <div class="section">
+            <h2>Sign Up</h2>
+            <form name="signup" action="/signup" method="post" >
+                <label for="signup-email">Email ID:</label>
+                <input type="email" id="signup-email" name="emailid" required 
+                       value="<%= (pagedata && pagedata.input) ? pagedata.input.emailid : '' %>">
+                <label for="signup-password">Password:</label>
+                <input type="password" id="signup-password" name="password" required>
+                <label for="signup-password-repeat">Repeat Password:</label>
+                <input type="password" id="signup-password-repeat" name="password2" required>
+                <label for="signup-display-name">Display Name:</label>
+                <input type="text" id="signup-display-name" name="name" required 
+                       value="<%= (pagedata && pagedata.input) ? pagedata.input.name : '' %>">
+                <button type="submit">Submit</button>
+                <div class="errors" id="signup-errors">
+                    <% if(pagedata.signuperrors && pagedata.signuperrors.length> 0) { %>
+                        <h4>Error</h4>
+                        <ul>
+                            <% for(i=0;i < pagedata.signuperrors.length;i++) { %>
+                                <li>
+                                    <%= pagedata.signuperrors[i].msg %>
+                                </li>
+                                <% } %>
+                        </ul>
+                    <% } %>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

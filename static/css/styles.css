@@ -1,0 +1,147 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    background-color: #4CAF50;
+    color: white;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.username {
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
+}
+
+.container {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    text-align: center;
+}
+
+.container .leftpanel {
+    min-width: 20%;
+    max-width: 20%;
+}
+
+.container .contentpanel {
+    flex-grow: 1;
+}
+
+.section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    text-align: left; /* Ensure text is left-justified */
+}
+
+.section h2 {
+    margin-top: 0;
+}
+
+.section label {
+    display: block;
+    margin: 10px 0 5px;
+    text-align: left; /* Ensure labels are left-justified */
+}
+
+.section input, .section textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.section button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right; /* Ensure buttons are right-justified */
+}
+
+.section button:hover {
+    background-color: #45a049;
+}
+
+.errors {
+    color: red;
+    margin-top: 10px;
+}
+
+.postsection, .timelinesection {
+    display: inline-block;   
+    width: 70%;
+}
+
+.timelinesection {
+    margin: 0.5rem 0;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid black ;
+    background-color: #eee;
+}
+
+.timelinesection > div {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.timelineitem {
+    margin-bottom: 0.50rem;
+    width: 95%;
+}

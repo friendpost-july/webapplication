@@ -1,0 +1,11 @@
+GET http://localhost:14010/users/abcdef
+
+###
+POST http://localhost:14010/users/create
+Content-Type: application/json
+
+{
+  "fullName": "hellobello",
+  "email": "string",
+  "firstName": "string"
+}

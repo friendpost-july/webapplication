@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FriendPost</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="header">
+        FriendPost
+        <div class="user-menu">
+            <span class="username">
+                <%= pagedata.user.name %>
+            </span>
+            <div class="dropdown-content">
+                <a href="#profile">Profile</a>
+                <a href="/auth/logout">Log Out</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Page content goes here -->
+        <div class="leftpanel">
+
+        </div>
+        <div class="contentpanel">
+            <h2>Welcome to FriendPost!</h2>
+
+            <fieldset name="New Post" class="section postsection">
+                <label for="newpost">Say What?</label>
+                <textarea id="newpost" rows="5"></textarea>
+                <button type="submit">Post</button>
+            </fieldset>
+
+            <div class="postsection timelinesection">
+                <div>
+                    <div class="section timelineitem">
+                        <h3>User 1</h3>
+                        <p>Something big happened.</p>
+                        <p>Huge, in fact.</p>
+                    </div>
+                    <div class="section timelineitem">
+                        <h3>User 2</h3>
+                        <p>Whatever it was, was nice.</p>
+                    </div>
+                    <div class="section timelineitem">
+                        <h3>User 3</h3>
+                        <p>Okay.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        document.querySelector('.username').addEventListener('click', function () {
+            document.querySelector('.dropdown-content').classList.toggle('show');
+        });
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.username')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
