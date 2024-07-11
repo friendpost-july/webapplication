@@ -1,0 +1,8 @@
+POST http://localhost:15001/posts
+Content-Type: application/json
+
+{
+    "userId": "zzxxcc",
+    "text": "Test Post happenning",
+    "visibility": "public"
+}

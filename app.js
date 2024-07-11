@@ -16,6 +16,7 @@ const DB_PASSWORD = process.env.DB_PASSWORD || 'dbsomething';
 const DB_DATABASE = process.env.DB_DATABASE || 'UserAuthDB';
 
 const repo = UserAuthRepo(DB_SERVER, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE);
+
 repo.ensuredb((error) => {
   if (error) {
     console.log('Could not connect to database: ' + error);
@@ -43,33 +44,15 @@ app.use(express.static('static'));
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const signUpRouter = require('./routes/signup');
+const apiRouter = require('./routes/api.js');
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter(repo));
 app.use('/signup', signUpRouter(repo));
-
-// test
-const UsersApiClient = require('./apiClients/usersApi.js');
-
-
-app.get('/testuserapi', async (req, res) => {
-  const client = new UsersApiClient('http://localhost:14010');
-  // let user = await client.getUser('abcd');
-
-  // res.json(user);
-
-  try {
-    let user = await client.createUser("a@b.com","Raj");
-    res.json(user)
-  } 
-  catch(error) {
-    res.status(500).write(`Create User failed with ${error}`);
-    res.end();
-  }
-})
+app.use('/api', apiRouter);
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

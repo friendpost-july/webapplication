@@ -9,18 +9,7 @@
 </head>
 
 <body>
-    <div class="header">
-        FriendPost
-        <div class="user-menu">
-            <span class="username">
-                <%= pagedata.user.name %>
-            </span>
-            <div class="dropdown-content">
-                <a href="#profile">Profile</a>
-                <a href="/auth/logout">Log Out</a>
-            </div>
-        </div>
-    </div>
+    <%- include('partials/loggedinheader.ejs') %>
     <div class="container">
         <!-- Page content goes here -->
         <div class="leftpanel">
@@ -32,7 +21,7 @@
             <fieldset name="New Post" class="section postsection">
                 <label for="newpost">Say What?</label>
                 <textarea id="newpost" rows="5"></textarea>
-                <button type="submit">Post</button>
+                <button type="submit" id="createpostbutton">Post</button>
             </fieldset>
 
             <div class="postsection timelinesection">
@@ -55,23 +44,8 @@
         </div>
 
     </div>
-    <script>
-        document.querySelector('.username').addEventListener('click', function () {
-            document.querySelector('.dropdown-content').classList.toggle('show');
-        });
-
-        window.onclick = function (event) {
-            if (!event.target.matches('.username')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
-    </script>
+    <%- include('partials/commonscripts.ejs') %>
+    <script src="/js/home.js" type="module"></script>
 </body>
 
 </html>

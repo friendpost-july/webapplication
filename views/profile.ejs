@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <% if(!pagedata.profile) { %>
+        <title><%= pagedata.user.name %> Profile</title>
+    <% } else { %>
+        <title>Profile</title>
+    <% } %>
+</head>
+
+<body>
+    <%- include('partials/loggedinheader.ejs') %>
+    <div class="container">
+        <div class="leftpanel">
+
+        </div>
+        <div class="contentpanel">
+            <h2>Profile</h1>
+            <div class="profiledata section">
+                <div class="profilerow">
+                    <label>Name :</label>
+                    <span id="profileName"></span>
+                </div>
+                <div class="profilerow">
+                    <label>Email :</label>
+                    <span id="profileEmail"></span>
+                </div>
+                <div class="profilerow editable">
+                    <label>Current City :</label>
+                    <input type="text" id="profileCurrentCity" value="" />
+                </div>
+                <div class="profilerow editable">
+                    <label>Home Town :</label>
+                    <input type="text" id="profileHomeTown" value="" />
+                </div>
+                <div class="profilerow">
+                    <label></label>
+                    <button id="profileSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('partials/commonscripts.ejs') %>
+    <script>
+    // <% if(pagedata.profile) { %>
+        window.profileid = "<%= pagedata.profile.id %>"
+    // <% } else { %>
+        window.profileid = "<%= pagedata.user.id %>"
+    // <% } %>
+    </script>
+    <script src="/js/profile.js" type="module"></script>
+</body>
+
+</html>

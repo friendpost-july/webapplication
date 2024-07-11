@@ -1,11 +1,24 @@
-GET http://localhost:14010/users/abcdef
+GET http://localhost:15002/v1/users?ids=668ff63210539bf400d43021
 
 ###
-POST http://localhost:14010/users/create
+POST http://localhost:8000/v1/users
 Content-Type: application/json
 
 {
-  "fullName": "hellobello",
-  "email": "string",
-  "firstName": "string"
+  "fullName": "Raj Chaudhuri",
+  "email": "raj@rajware.net"
 }
+
+###
+PUT http://localhost:8000/v1/users/668eba43f929d0003542d644
+Content-Type: application/json
+
+{
+  "homeTown": "Bangalore",
+  "hobbies": ["Reading", "Writing"]
+}
+
+###
+DELETE http://localhost:8000/v1/users/668eba43f929d0003542d644
+###
+GET  http://localhost:8000/v1/user-statuses?ids=668e63a63b873b88508205ff

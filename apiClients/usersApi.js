@@ -7,17 +7,27 @@ class UsersApiClient extends ApiClientBase {
         super(baseUrl);
     }
 
-    async getUser(userId) {
-        return this.get(`/users/${userId}`);
+    async getUser(userId) { 
+        const ids = Array.isArray(userId) ? userId.join(',') : userId
+        return this.get(`/users?ids=${ids}`);
     }
 
     async createUser(email, name) {
         const newUser = {
-            id: "unknown",
             email: email,
-            firstName: name
+            fullName: name,
+            currentCity: '',
+            homeTown: ''
         };
         return this.post('/users', newUser);
+    }
+
+    async modifyUser(userId, currentCity, homeTown) {
+        const modifiedRecord = {
+            currentCity: currentCity,
+            homeTown: homeTown
+        }
+        return this.put(`/users/${userId}`, modifiedRecord);
     }
 }
 

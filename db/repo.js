@@ -25,6 +25,7 @@ UserAuthRepo.prototype.ensuredb = function (callback) {
                                 emailid VARCHAR(255) NOT NULL,
                                 name VARCHAR(255) NOT NULL,
                                 passwordhash VARCHAR(255) NOT NULL,
+                                usersserviceid VARCHAR(255) NOT NULL,
                                 UNIQUE(emailid)
     )
     `;
@@ -44,7 +45,7 @@ UserAuthRepo.prototype.ensuredb = function (callback) {
  * @param {{(error:any, result:boolean, user:any)=> void}} callback 
  */
 UserAuthRepo.prototype.validatePassword = function (emailId, password, callback) {
-    const query = 'SELECT id, emailid, name, passwordhash FROM Users WHERE emailid = ?';
+    const query = 'SELECT id, emailid, name, passwordhash, usersserviceid FROM Users WHERE emailid = ?';
     this.db.query(query, [emailId], (err, results) => {
         if (err) {
             return callback(err, null);
@@ -59,7 +60,7 @@ UserAuthRepo.prototype.validatePassword = function (emailId, password, callback)
             if (err) {
                 callback(err, null, null);
             } else {
-                callback(null, result, result ? user : null);
+                callback(null, result, result ? { id: user.usersserviceid, emailid: emailId, name: user.name } : null);
             }
         });
     });
@@ -69,20 +70,21 @@ UserAuthRepo.prototype.validatePassword = function (emailId, password, callback)
  * 
  * @param {string} emailId 
  * @param {string} username 
- * @param {string} password 
+ * @param {string} password
+ * @param {string} usersserviceid
  * @param {UserAuthRepo~userCallback} callback 
  */
-UserAuthRepo.prototype.newUser = function (emailId, username, password, callback) {
+UserAuthRepo.prototype.newUser = function (emailId, username, password, usersserviceid, callback) {
     const db = this.db;
     const saltRounds = 10;
 
     bcrypt.hash(password, saltRounds, function (err, hash) {
-        const query = `INSERT INTO Users (emailid, name, passwordhash) VALUES (?, ?, ?)`;
-        db.query(query, [emailId, username, hash], (err, result) => {
+        const query = `INSERT INTO Users (emailid, name, passwordhash, usersserviceid) VALUES (?, ?, ?, ?)`;
+        db.query(query, [emailId, username, hash, usersserviceid], (err, result) => {
             if (err) {
                 callback(err, null);
             } else {
-                callback(null, { id: result.insertId, emailid: emailId, name: username }); // Return the inserted ID
+                callback(null, { id: result.usersserviceid, emailid: emailId, name: username }); // Return the inserted ID
             }
         });
     });
