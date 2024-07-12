@@ -2,6 +2,7 @@ volumes:
   authdbvol:
   usersdbvol:
   rmqvol:
+  cachevol:
 
 services:
   authdb:
@@ -21,12 +22,46 @@ services:
     volumes:
       - usersdbvol:/data/db
 
+  redis:
+    image: redis/redis-stack:latest
+    ports:
+      - 6379:6379
+      - 18001:8001
+    volumes:
+      - cachevol:/data
+
+  eventbus:
+    image: rabbitmq:3.13.3-management-alpine
+    hostname: rmq
+    volumes:
+      - rmqvol:/var/lib/rabbitmq:rw
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=something
+      - RABBITMQ_ERLANG_COOKIE=chocochip
+
+
   # adminer:
   #   image: adminer:latest
   #   ports:
   #     - 18080:8080
   #   environment:
   #     - ADMINER_DEFAULT_SERVER=authdb
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8989:8081
+    environment:
+      # ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      # ME_CONFIG_MONGODB_ADMINPASSWORD: something
+      ME_CONFIG_MONGODB_URL: mongodb://usersdb:27017/
+      ME_CONFIG_BASICAUTH: false
+
 
   # usersservice:
   #   image: stoplight/prism:4
@@ -44,41 +79,54 @@ services:
       - PORT=15002
       - MONGODB_HOST=usersdb
       - RABBITMQ_URL=amqp://admin:something@eventbus
-    
-  timelineservice:
-    image: stoplight/prism:4
-    # volumes:
-    #   - ./user_spec.yml:/user_spec.yml
-    ports:
-      - 14013:4010
-    command: ["mock", "-h", "0.0.0.0", "https://raw.githubusercontent.com/friendpost-july/timeline-spec/main/api-spec.yml"]
 
-  postsservice:
-    image: stoplight/prism:4
-    ports:
-      - 15001:4010
-    command: ["mock", "-h", "0.0.0.0", "https://raw.githubusercontent.com/friendpost-july/post-management-spec/main/post-spec.yml"]
-
-  eventbus:
-    image: rabbitmq:3.13.3-management-alpine
-    hostname: rmq
-    volumes:
-      - rmqvol:/var/lib/rabbitmq:rw
-    ports:
-      - 5672:5672
-      - 15672:15672
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=something
-      - RABBITMQ_ERLANG_COOKIE=chocochip
-
-  # frontend:
-  #   image: friendpost-frontend:0.10
+  # postsservice:
+  #   image: stoplight/prism:4
   #   ports:
-  #     - 18019:8080
-  #   environment:
-  #     - DB_SERVER=authdb
-  #     - DB_PORT=3306
-  #     - DB_USER=dbuser
-  #     - DB_PASSWORD=dbsomething
-  #     - DB_DATABASE=UserAuthDB
+  #     - 15001:4010
+  #   command: ["mock", "-h", "0.0.0.0", "https://raw.githubusercontent.com/friendpost-july/post-management-spec/main/post-spec.yml"]
+  postsservice:
+    image: rajchaudhuri/friendpost-postsservice:0.3.0
+    ports:
+      - 15001:8080
+    environment:
+      MONGO_URL: mongodb://usersdb:27017/postDB
+      LISTEN_PORT: 8080
+      RABBITMQ_URL: amqp://admin:something@eventbus
+      RABBITMQ_EXCHANGE_NAME: FriendPostUserAdded
+
+  # timelineservice:
+  #   image: stoplight/prism:4
+  #   ports:
+  #     - 14013:4010
+  #   command: ["mock", "-h", "0.0.0.0", "https://raw.githubusercontent.com/friendpost-july/timeline-spec/main/api-spec.yml"]
+  timelineservice:
+    image: rajchaudhuri/friendpost-timelineservice:0.1.4
+    ports:
+      - 15056:15033
+    environment:
+      - PORT=15033
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - POST_SERVICE_ENV=http://postsservice:8080/v1
+      - FRIENDS_SERVICE_ENV=http://friendsservice:4010
+      - USER_SERVICE_ENV=http://usersservice:15002/v1
+      - RABBITMQ_URL=amqp://admin:something@eventbus
+      - RABBITMQ_EXCHANGE_NAME=FriendPostPostAdded
+
+  frontend:
+    #image: friendpost-frontend:0.10
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 18019:8080
+    environment:
+      - DB_SERVER=authdb
+      - DB_PORT=3306
+      - DB_USER=dbuser
+      - DB_PASSWORD=dbsomething
+      - DB_DATABASE=UserAuthDB
+      - API_USERS_URL=http://usersservice:15002/v1
+      - API_POSTS_URL=http://postsservice:8080/v1
+      - API_TIMELINE_URL=http://timelineservice:15033

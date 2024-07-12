@@ -16,7 +16,7 @@ const addTimelineItem = (item) => {
     const newdiv = document.createElement('div');
     //newdiv.attributes['class'] = "section timelineitem";
     newdiv.setAttribute('class', 'section timelineitem');
-    newdiv.innerHTML = `<h3>${item.userName}</h3><p>${item.content}</p>`;
+    newdiv.innerHTML = `<h3>${item.fullName}</h3><p>${item.text}</p>`;
 
     const timelinediv = getTimelineDiv();
     timelinediv.insertBefore(newdiv, timelinediv.firstChild);
@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
     try {
         const results = await tclient.getTimeline();
-        if (results.length && results.length < 0) {
-            clearTimeline('Nothing to see here.');
+        if (results.length == 0) {
+            clearTimeline('Nothing to see yet. Please try again later. <div><button class="refreshbutton">Refresh</button></div>');
             return
         }
         clearTimeline();
@@ -50,7 +50,12 @@ document.getElementById('createpostbutton').addEventListener('click', async (e) 
     try {
         const result = await tclient.createPost(textarea.value);
         if (result.data.postId) {
-            addTimelineItem({ userName: 'window.user.userName', content: textarea.value + ` PostId:${result.data.postId}` });
+            addTimelineItem({ 
+                userId: window.user.id,
+                fullName: window.user.name,
+                text: textarea.value,
+                postId: result.data.postId 
+            });
         }
     } catch (error) {
         window.alert("ERROR:" + error);

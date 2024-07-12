@@ -8,7 +8,7 @@ class TimelineApiClient extends ApiClientBase {
     }
 
     async getTimeline(userId) {
-        return this.get(`/timeline/$userId`);
+        return this.get(`/timeline/${userId}`);
     }
 }
 

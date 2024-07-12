@@ -31,22 +31,24 @@
                 </div>
                 <div class="profilerow editable">
                     <label>Current City :</label>
-                    <input type="text" id="profileCurrentCity" value="" />
+                    <input type="text" id="profileCurrentCity" value="" <%= pagedata.otheruser ? 'readonly' : '' %> />
                 </div>
                 <div class="profilerow editable">
                     <label>Home Town :</label>
-                    <input type="text" id="profileHomeTown" value="" />
+                    <input type="text" id="profileHomeTown" value="" <%= pagedata.otheruser ? 'readonly' : '' %> />
                 </div>
+                <% if(!pagedata.otheruser) {%>
                 <div class="profilerow">
                     <label></label>
                     <button id="profileSave">Save</button>
                 </div>
+                <% } %>
             </div>
         </div>
     </div>
     <%- include('partials/commonscripts.ejs') %>
     <script>
-    // <% if(pagedata.profile) { %>
+    // <% if(pagedata.profile?.id) { %>
         window.profileid = "<%= pagedata.profile.id %>"
     // <% } else { %>
         window.profileid = "<%= pagedata.user.id %>"

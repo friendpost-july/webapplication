@@ -16,11 +16,11 @@ router.get('/', ensureAuthenticated, (req, res) => {
 });
 
 router.get('/profile', ensureAuthenticated, (req, res) => {
-  const id = req.params["id"];
+  const id = req.query.id;
   const pageObject = { pagedata: { user: req.user } };
   
   if(id && id !== req.user.id) {
-    
+    pageObject.pagedata.otheruser = true;
     pageObject.pagedata.profile = { id: id };
   }
   res.render('profile', pageObject);
